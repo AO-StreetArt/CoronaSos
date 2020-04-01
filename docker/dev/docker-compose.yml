@@ -1,0 +1,46 @@
+version: '2.1'
+
+services:
+  registry:
+    image: consul
+    container_name: registry
+    ports:
+      - "8500:8500"
+    command: agent --dev -ui -client=0.0.0.0
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:8500/v1/status/leader"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - XPACK_LICENSE_SELF_GENERATED_TYPE=basic
+      - XPACK_SECURITY_ENABLED=false
+      - XPACK_MONITORING_COLLECTION_ENABLED=false
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:9200/_cluster/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.6.1
+    ports:
+      - "5601:5601"
+    environment:
+      - SERVER_NAME=kibana
+      - SERVER_HOST="0"
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - XPACK_MONITORING_UI_CONTAINER_ELASTICSEARCH_ENABLED=false
+    depends_on:
+      - elasticsearch
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:9200/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
