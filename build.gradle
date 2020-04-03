@@ -1,10 +1,20 @@
+buildscript {
+	ext.kotlin_version = '1.3.71'
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+	}
+}
 plugins {
+	id "org.jetbrains.kotlin.jvm" version "1.3.71"
 	id 'org.springframework.boot' version '2.2.6.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
 }
-
 apply plugin: 'checkstyle'
+apply plugin: 'kotlin'
 
 group = 'ao.corona'
 version = '0.0.1-SNAPSHOT'
@@ -46,6 +56,7 @@ dependencies {
   compile('org.springframework.security:spring-security-web:5.1.0.RELEASE')
   compile('org.springframework.security:spring-security-config:5.1.0.RELEASE')
   compile('org.springframework.security:spring-security-core:5.1.0.RELEASE')
+	compile('com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8')
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -53,6 +64,8 @@ dependencies {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation("com.ninja-squad:springmockk:1.1.2")
+	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
 dependencyManagement {
@@ -63,4 +76,14 @@ dependencyManagement {
 
 test {
 	useJUnitPlatform()
+}
+compileKotlin {
+	kotlinOptions {
+		jvmTarget = "1.8"
+	}
+}
+compileTestKotlin {
+	kotlinOptions {
+		jvmTarget = "1.8"
+	}
 }

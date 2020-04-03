@@ -11,17 +11,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+package ao.corona.coronasos.repo
 
-package ao.corona.coronasos.repo;
+import ao.corona.coronasos.entity.MedicalSupplyPost
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-import ao.corona.coronasos.entity.MedicalSupplyPost;
-
-public interface MedicalSupplyPostRepository extends ElasticsearchRepository<MedicalSupplyPost, String> {
-
-    Page<MedicalSupplyPost> findByUsername(String name, Pageable pageable);
+interface MedicalSupplyPostRepository : ElasticsearchRepository<MedicalSupplyPost, String> {
+    fun findByUsername(name: String, pageable: Pageable): Page<MedicalSupplyPost>
 
     // @Query("{\"bool\": {\"must\": [{\"match\": {\"authors.name\": \"?0\"}}]}}")
     // Page<MedicalSupplyPost> findBySupplyType(String typeQuery, Pageable pageable);

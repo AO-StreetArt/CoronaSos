@@ -11,16 +11,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+package ao.corona.coronasos.entity
 
-package ao.corona.coronasos.entity;
-
-import lombok.Data;
-
-import org.springframework.data.annotation.Id;
-
-@Data
-public class MedicalSupplyAmount {
-  private String supplyType;
-  private int supplyAmount;
-  private String supplyUnits;
-}
+data class MedicalSupplyAmount (
+    private val supplyType: String,
+    private val supplyAmount: Int = 0,
+    private val supplyUnits: String? = null
+)

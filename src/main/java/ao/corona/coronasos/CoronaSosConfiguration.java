@@ -14,23 +14,34 @@ limitations under the License.
 
 package ao.corona.coronasos;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.kotlin.KotlinModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.data.elasticsearch.client.RestClients;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 @Configuration
 class CoronaSosConfiguration {
 
-  @Bean
-  RestHighLevelClient client() {
+    @Bean
+    RestHighLevelClient client() {
 
-    ClientConfiguration clientConfiguration = ClientConfiguration.builder()
-      .connectedTo("localhost:9200", "localhost:9201")
-      .build();
+        ClientConfiguration clientConfiguration = ClientConfiguration.builder()
+                .connectedTo("localhost:9200", "localhost:9201")
+                .build();
 
-    return RestClients.create(clientConfiguration).rest();
-  }
+        return RestClients.create(clientConfiguration).rest();
+    }
+
+    @Bean
+    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
+        MappingJackson2HttpMessageConverter jsonConverter = new MappingJackson2HttpMessageConverter();
+        ObjectMapper objectMapper = new ObjectMapper().registerModule(new KotlinModule());
+        jsonConverter.setObjectMapper(objectMapper);
+        return jsonConverter;
+    }
 }
